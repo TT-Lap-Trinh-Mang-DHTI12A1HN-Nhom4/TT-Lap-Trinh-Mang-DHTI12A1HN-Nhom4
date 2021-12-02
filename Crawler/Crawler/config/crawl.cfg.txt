@@ -1,0 +1,10 @@
+#url to crawl
+urls = https://vietnamnet.vn/vn/thoi-su/
+same.domain = true
+output.type = file
+output.folder = D:/output2/
+output.file = D:/output2/vietnam.txt
+max.item.check = 10000
+id.containers = wrapper_container,body
+class.containers = container,content,pContent,main
+
