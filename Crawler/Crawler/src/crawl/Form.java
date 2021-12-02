@@ -127,14 +127,13 @@ public class Form extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_okActionPerformed
-        // TODO add your handling code here:
-        
+         String oldContent = "";
+          BufferedReader reader = null;
+          FileWriter writer = null;
         try {
-            
             String url = link.getText().toString();
-            
-            String content = "#url to crawl\n" +
-                        "urls = "+url+"/" +
+            String content = "\n#url to crawl\n" +
+                        "urls = "+url+"\n" +
                         "same.domain = true\n" +
                         "output.type = file\n" +
                         "output.folder = D:/output2/\n" +
@@ -142,47 +141,45 @@ public class Form extends javax.swing.JFrame {
                         "max.item.check = 10000\n" +
                         "id.containers = wrapper_container,body\n" +
                         "class.containers = container,content,pContent,main";
-            File file =new File("D:\\NetBeanProjects\\Crawler\\Crawler\\config\\crawl.cfg.tx");
- 
-        /* This logic is to create the file if the
-         * file is not already present
-         */
-        if(!file.exists()){
-           file.createNewFile();
-        }
- 
-        //Here true is to append the content to file
-        FileWriter fw = new FileWriter(file,true);
-        //BufferedWriter writer give better performance
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(content);
-        //Closing BufferedWriter Stream
-        bw.close();
- 
-//        System.out.println("Data successfully appended at the end of file");
-            
-            
-            String FILENAME = "D:\\NetBeanProjects\\Crawler\\Crawler\\config\\crawl.cfg.tx";
-            
-            //String configFileName = args[0];
+            File file =new File("D:\\NetBeanProjects\\Crawler\\Crawler\\config\\crawl.cfg.txt");
+            if(!file.exists()){
+               file.createNewFile();
+            }
+            FileWriter fw = new FileWriter(file,true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            reader = new BufferedReader(new FileReader(file));
+             
+            //Reading all the lines of input text file into oldContent
+             
+            String line = reader.readLine();
+             
+            while (line != null) 
+            {
+                oldContent = oldContent + line + System.lineSeparator();
+                 
+                line = reader.readLine();
+            }
+             
+            //Replacing oldString with newString in the oldContent
+             
+            String newContent = oldContent.replaceAll(oldContent, content);
+            writer = new FileWriter(file);
+             
+            writer.write(newContent);
+            writer.close();
+//            bw.write(content);
+//            bw.close();
+//            String FILENAME = "D:\\NetBeanProjects\\Crawler\\Crawler\\config\\crawl.cfg.txt";
 		String configFileName = "D:\\NetBeanProjects\\Crawler\\Crawler\\config\\crawl.cfg.txt";
-		//String urlExtractedFileName = args[1];
 		String urlExtractedFileName = "D:\\NetBeanProjects\\Crawler\\Crawler\\config\\url-extracted.vars";
 		fw = new FileWriter(urlExtractedFileName, true);
 		Writer out = null;
-		try {
+		try {                    
 			loadUrlExtracted(urlExtractedFileName);
 			loadConfig(configFileName);
-
-			// Validate.isTrue(args.length == 1, "usage: supply url to fetch");
-			// String url = args[0];
-
-			// String url = URL;
-			// urls.add(url);
 			if (output_type.equals("file")) {
 				out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output_file, true), "UTF8"));
 			}
-
 			while (urls.size() > 0) {
 				String urlProcess = (String) urls.iterator().next();
 				if (!url_extracted.contains(urlProcess)) {
@@ -197,7 +194,6 @@ public class Form extends javax.swing.JFrame {
 					url_extracted.add(urlProcess);
 				}
 			}
-
 			if (output_type.equals("file")) {
 				out.close();
 			}
